@@ -14,5 +14,10 @@ def get_readings(vehicle_id):
         df= df.sort_values("date")
         return df
 
+def find_rollback(df):
+    df["km_change"]= df["km"].diff()
+    df["is_rollback"] = df["km_change"] < 0
+    return df
+
 if __name__ == "__main__":
-    print(get_readings(3))
+    print(find_rollback(get_readings(3)))
