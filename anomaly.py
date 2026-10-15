@@ -28,5 +28,12 @@ def find_jump(df):
     df["is_jump"] = (df["days_gap"] <= 60) & (df["km_change"] >= 10000)
     return df
 
+def analyze(vehicle_id):
+    df = get_readings(vehicle_id)
+    df = find_rollback(df)
+    df = find_flatline(df)
+    df = find_jump(df)
+    return df
+
 if __name__ == "__main__":
-    print(find_jump(find_flatline(find_rollback(get_readings(6)))))
+    print(analyze(6))
