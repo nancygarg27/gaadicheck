@@ -21,8 +21,12 @@ def find_rollback(df):
 
 def find_flatline(df):
     df["days_gap"]= pd.to_datetime(df["date"]).diff().dt.days
-    df["is_flatline"] = (df["days_gap"] > 180) & (df["km_change"] < 500 )
+    df["is_flatline"] = (df["days_gap"] > 180) & (df["km_change"] >= 0)& (df["km_change"] < 500 )
+    return df
+
+def find_jump(df):
+    df["is_jump"] = (df["days_gap"] <= 60) & (df["km_change"] >= 10000)
     return df
 
 if __name__ == "__main__":
-    print(find_flatline(find_rollback(get_readings(5))))
+    print(find_jump(find_flatline(find_rollback(get_readings(6)))))
