@@ -3,6 +3,11 @@ from sqlmodel import select, Session
 from database import engine
 from models import OdometerReading
 
+FLATLINE_MIN_DAYS = 180
+FLATLINE_MAX_KM = 500
+JUMP_MAX_DAYS = 60
+JUMP_MIN_KM = 10000
+
 def get_readings(vehicle_id):
     with Session(engine) as session:
         statement = select(OdometerReading).where(OdometerReading.vehicle_id == vehicle_id)
@@ -21,11 +26,11 @@ def find_rollback(df):
 
 def find_flatline(df):
     df["days_gap"]= pd.to_datetime(df["date"]).diff().dt.days
-    df["is_flatline"] = (df["days_gap"] > 180) & (df["km_change"] >= 0)& (df["km_change"] < 500 )
+    df["is_flatline"] = (df["days_gap"] > FLATLINE_MIN_DAYS) & (df["km_change"] >= 0)& (df["km_change"] < FLATLINE_MAX_KM )
     return df
 
 def find_jump(df):
-    df["is_jump"] = (df["days_gap"] <= 60) & (df["km_change"] >= 10000)
+    df["is_jump"] = (df["days_gap"] <= JUMP_MAX_DAYS) & (df["km_change"] >= JUMP_MIN_KM)
     return df
 
 def analyze(vehicle_id):
