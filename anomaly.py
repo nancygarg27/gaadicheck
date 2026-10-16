@@ -15,6 +15,11 @@ def get_vehicle_id_by_plate_number(plate):
         vehicle_id = session.exec(select(Vehicle.id).where(Vehicle.plate_number == plate)).first()
     return vehicle_id
 
+def get_vehicle_details(vehicle_id):
+    with Session(engine) as session:
+        row_data= session.get(Vehicle, vehicle_id)
+        return row_data
+
 def get_readings(vehicle_id):
     with Session(engine) as session:
         statement = select(OdometerReading).where(OdometerReading.vehicle_id == vehicle_id)
@@ -25,6 +30,7 @@ def get_readings(vehicle_id):
         df = pd.DataFrame(data)
         df= df.sort_values("date")
         return df
+
 
 def find_rollback(df):
     df["km_change"]= df["km"].diff()
