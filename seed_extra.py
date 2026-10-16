@@ -4,11 +4,11 @@ from database import engine
 from models import Vehicle, OdometerReading, Challan, Loan, ServiceRecord, Owner
 
 with Session(engine) as session :
-    result = Challan(vehicle_id = 2, challan_date = date(2024, 8, 22), amount_of_fine= 500, reason_of_challan= "over-speeding", is_paid = True)
-    session.add(result)
-    result1 = Challan(vehicle_id = 3, challan_date = date(2024, 1, 22), amount_of_fine= 800, reason_of_challan= "red-light break", is_paid = True)
-    session.add(result1)
-    result2 = Challan(vehicle_id = 3, challan_date = date(2024, 12, 18), amount_of_fine= 1500, reason_of_challan= "drink and drive", is_paid = False)
-    session.add(result2)
+    loan_car3 = Loan(vehicle_id = 3, bank_name = "HDFC Bank", loan_amount = 450000, is_active = True)
+    loan_car5 = Loan(vehicle_id = 5, bank_name = "SBI", loan_amount = 600000, is_active = False)
+    loan_car6 = Loan(vehicle_id = 6, bank_name = "ICICI Bank", loan_amount = 900000, is_active = True)
+    session.add(loan_car3)
+    session.add(loan_car5)
+    session.add(loan_car6)
     session.commit()
     
