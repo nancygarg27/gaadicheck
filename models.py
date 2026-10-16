@@ -22,3 +22,33 @@ class OdometerReading(SQLModel, table= True):
     distance_km : int
     source : str = Field(description = "From where did you get the reading?" \
     " 1. service , 2. insurance , 3. inspection")
+
+class Owner(SQLModel, table = True):
+    id : Optional[int] = Field(default = None, primary_key = True)
+    vehicle_id : int = Field(foreign_key = "vehicle.id", index = True)
+    owner_name : str
+    city : str
+    owned_from_date : date
+    owned_to_date : Optional[date] = Field(default = None)
+
+class Challan(SQLModel, table= True):
+    id : Optional[int] = Field(default = None, primary_key = True)
+    vehicle_id : int = Field(foreign_key = "vehicle.id", index = True)
+    challan_date : date
+    amount_of_fine : int
+    reason_of_challan : str
+    is_paid : bool
+
+class Loan(SQLModel, table = True):
+    id : Optional[int] = Field(default = None, primary_key = True)
+    vehicle_id : int = Field(foreign_key = "vehicle.id", index = True)
+    bank_name : str
+    loan_amount : int
+    is_active : bool 
+
+class ServiceRecord(SQLModel, table = True):
+    id : Optional[int] = Field(default = None, primary_key = True)
+    vehicle_id : int = Field(foreign_key = "vehicle.id", index = True)
+    service_date : date
+    work_done : str
+    km_at_service : int
