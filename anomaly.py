@@ -1,12 +1,19 @@
 import pandas as pd
 from sqlmodel import select, Session
 from database import engine
-from models import OdometerReading
+from models import OdometerReading, Vehicle
 
 FLATLINE_MIN_DAYS = 180
 FLATLINE_MAX_KM = 500
 JUMP_MAX_DAYS = 60
 JUMP_MIN_KM = 10000
+
+def get_vehicle_id_by_plate_number(plate):
+    plate = plate.upper()
+    plate = plate.replace(" ", "")
+    with Session(engine) as session:
+        vehicle_id = session.exec(select(Vehicle.id).where(Vehicle.plate_number == plate)).first()
+    return vehicle_id
 
 def get_readings(vehicle_id):
     with Session(engine) as session:
@@ -41,4 +48,4 @@ def analyze(vehicle_id):
     return df
 
 if __name__ == "__main__":
-    print(analyze(6))
+    print(get_vehicle_id_by_plate_number("mh 12 ab 1234"))
