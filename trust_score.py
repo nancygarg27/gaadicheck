@@ -10,13 +10,25 @@ def calculate_trust_score(vehicle_id):
     df = analyze(vehicle_id)
     if(df["is_rollback"].sum() > 0):
         score -= 40
-        reasons.append("-40 : Meter rollback detected")
+        bad = df[df["is_rollback"]].iloc[0]
+        before = int(bad["km"]- bad["km_change"])
+        after = int(bad["km"])
+        reasons.append(f"-40 : Meter rollback : {before} to {after} km")
+    
     if(df["is_flatline"].sum() > 0):
         score -= 15
-        reasons.append("-15 : Meter flatline detected")
+        flat = df[df["is_flatline"]]
+        
+        total_kms += int(flat["days_gap"].sum())
+        total_days += int(flat["km_change"].sum())
+        reasons.append(f"-15 : Meter flatline : only {total_km} addded in {total_days} days")
+    
     if(df["is_jump"].sum() > 0):
         score -= 20
-        reasons.append("-20 : Unrealistic km jump detected")
+        jump = df[df["is_jump"]].iloc[0]
+        km_added = int(jump["km_change"])
+        days = int(jump["days_gap"])
+        reasons.append(f"-20 : Unrealistic jump: {km_added} km added in {days} days")
 
     with Session(engine) as session:
         loans = session.exec(select(Loan).where(Loan.vehicle_id == vehicle_id, Loan.is_active == True)).all()
