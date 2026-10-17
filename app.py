@@ -1,6 +1,8 @@
 import streamlit as st
-from anomaly import get_vehicle_details, get_vehicle_id_by_plate_number
+from anomaly import get_vehicle_details, get_vehicle_id_by_plate_number, analyze
 from trust_score import calculate_trust_score
+from chart import build_chart
+
 
 st.set_page_config(
     page_title = "GaadiCheck",
@@ -55,4 +57,8 @@ if check:
             else:
                 for reason in reasons:
                     st.error(reason)
+
+            df= analyze(vehicle_id)
+            st.subheader("Odometer History")
+            st.plotly_chart(build_chart(df), use_container_width=True)
 

@@ -53,5 +53,3 @@ def analyze(vehicle_id):
     df = find_jump(df)
     return df
 
-if __name__ == "__main__":
-    print(get_vehicle_id_by_plate_number("mh 12 ab 1234"))
