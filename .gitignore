@@ -1,3 +1,5 @@
 venv/
 .env
 test_connection.py
+data/
+# https://www.kaggle.com/datasets/manishkr1754/cardekho-used-car-data?resource=download
