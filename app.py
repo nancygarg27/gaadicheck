@@ -2,7 +2,7 @@ import streamlit as st
 from anomaly import get_vehicle_details, get_vehicle_id_by_plate_number, analyze
 from trust_score import calculate_trust_score
 from chart import build_chart
-
+from report import build_report
 
 st.set_page_config(
     page_title = "GaadiCheck",
@@ -61,4 +61,7 @@ if check:
             df= analyze(vehicle_id)
             st.subheader("Odometer History")
             st.plotly_chart(build_chart(df), use_container_width=True)
+
+            pdf_bytes= build_report(vehicle_id)
+            st.download_button(label="Download Inspection Report", data=pdf_bytes, file_name=f"{vehicle.plate_number}_report.pdf", mime="application/pdf")
 
